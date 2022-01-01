@@ -4,7 +4,14 @@ from chatterbot.trainers import ChatterBotCorpusTrainer, ListTrainer
 
 app = Flask(__name__)
 
-english_bot = ChatBot("ChatBotName", storage_adapter="chatterbot.storage.SQLStorageAdapter")
+english_bot = ChatBot("ChatBotName",
+                      storage_adapter="chatterbot.storage.SQLStorageAdapter",
+                      logic_adapters=[
+                          'chatterbot.logic.BestMatch',
+                          'chatterbot.logic.TimeLogicAdapter',
+                          'chatterbot.logic.MathematicalEvaluation'
+                      ])
+
 trainer = ChatterBotCorpusTrainer(english_bot)
 trainer.train("chatterbot.corpus.english")
 
@@ -16,6 +23,7 @@ train_list = ['Hello, who can help you',
 
 list_trainer = ListTrainer(english_bot)
 list_trainer.train(train_list)
+
 
 @app.route("/")
 def home():
